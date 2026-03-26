@@ -76,8 +76,6 @@ Start from a template that matches your use case:
 | `autoresearch-generic.yaml` | Minimal starting point for any experiment |
 | `code-autoresearch.yaml` | Git-backed code mutation loop |
 | `local-agent-autoresearch.yaml` | Provider-agnostic local agent mutation |
-| `openai-codex-autoresearch.yaml` | OpenAI-backed code mutation |
-| `claude-autoresearch.yaml` | Claude-backed code mutation |
 | `multifidelity-autoresearch.yaml` | Proxy/final two-tier experiments |
 | `research-sprint.yaml` | Time-boxed research sprint |
 
@@ -175,7 +173,9 @@ final_executor_class: cloud-h100
 
 ## Agent Integration
 
-Hermes Lab is designed for AI agents. The `AGENTS.md` file at the repo root is the agent contract. `LAB_MANIFEST.json` is the machine-readable version.
+Hermes Lab is designed for AI agents. The recommended agent is [hermes-agent](https://github.com/amenti-labs/hermes-agent), but any agent that can read files and run shell commands will work.
+
+The `AGENTS.md` file at the repo root is the agent contract. `LAB_MANIFEST.json` is the machine-readable version.
 
 Agents get structured context via environment variables:
 

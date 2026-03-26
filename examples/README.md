@@ -74,14 +74,11 @@ python3 scripts/labctl.py burst my-experiment --strategy random -n 20
 
 ## Example: Agent-Driven Code Mutation
 
-Use Claude or OpenAI to iteratively improve code:
+Use any AI agent (recommended: [hermes-agent](https://github.com/amenti-labs/hermes-agent)) to iteratively improve code:
 
 ```bash
-# Create from the agent mutation template
-python3 scripts/labctl.py create templates/claude-autoresearch.yaml
-
-# Or for OpenAI
-python3 scripts/labctl.py create templates/openai-codex-autoresearch.yaml
+# Create from the local agent mutation template
+python3 scripts/labctl.py create templates/local-agent-autoresearch.yaml
 ```
 
 The agent will:

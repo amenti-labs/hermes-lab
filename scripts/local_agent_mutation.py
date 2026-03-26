@@ -70,43 +70,48 @@ def run_stub(route_dir: Path, args: argparse.Namespace) -> int:
 
 
 def provider_command(args: argparse.Namespace) -> list[str]:
+    """Build a mutation command for the given provider.
+
+    Custom adapters can be placed in scripts/<provider>_mutation_adapter.py.
+    The router will find them automatically.
+    """
     provider = args.provider.strip().lower()
-    base = [sys.executable]
-    if provider in {"openai", "codex", "gpt"}:
-        command = base + [str(REPO_ROOT / "scripts" / "openai_mutation_adapter.py")]
-        if args.model:
-            command.extend(["--model", args.model])
-        if args.effort:
-            command.extend(["--reasoning-effort", args.effort])
-        if args.instruction:
-            command.extend(["--instruction", args.instruction])
-        if args.instruction_file:
-            command.extend(["--instruction-file", args.instruction_file])
-        if args.base_url:
-            command.extend(["--base-url", args.base_url])
-        if args.background:
-            command.append("--background")
-        for extra in args.extra_path:
-            command.extend(["--extra-path", extra])
-        return command
-    if provider in {"claude", "anthropic"}:
-        command = base + [str(REPO_ROOT / "scripts" / "claude_mutation_adapter.py")]
-        if args.model:
-            command.extend(["--model", args.model])
-        if args.effort:
-            command.extend(["--effort", args.effort])
-        if args.instruction:
-            command.extend(["--instruction", args.instruction])
-        if args.instruction_file:
-            command.extend(["--instruction-file", args.instruction_file])
-        if args.base_url:
-            command.extend(["--base-url", args.base_url])
-        for extra in args.extra_path:
-            command.extend(["--extra-path", extra])
-        return command
     if provider == "stub":
         return []
-    raise RuntimeError(f"Unsupported local agent provider: {args.provider}")
+
+    # Look for a provider-specific adapter script
+    adapter = REPO_ROOT / "scripts" / f"{provider}_mutation_adapter.py"
+    if not adapter.exists():
+        # Also check common aliases
+        aliases = {
+            "openai": "openai", "codex": "openai", "gpt": "openai",
+            "claude": "claude", "anthropic": "claude",
+        }
+        canonical = aliases.get(provider, provider)
+        adapter = REPO_ROOT / "scripts" / f"{canonical}_mutation_adapter.py"
+
+    if not adapter.exists():
+        raise RuntimeError(
+            f"No mutation adapter found for provider '{args.provider}'. "
+            f"Create scripts/{provider}_mutation_adapter.py or use provider=stub."
+        )
+
+    command = [sys.executable, str(adapter)]
+    if args.model:
+        command.extend(["--model", args.model])
+    if args.effort:
+        command.extend(["--effort", args.effort])
+    if args.instruction:
+        command.extend(["--instruction", args.instruction])
+    if args.instruction_file:
+        command.extend(["--instruction-file", args.instruction_file])
+    if args.base_url:
+        command.extend(["--base-url", args.base_url])
+    if args.background:
+        command.append("--background")
+    for extra in args.extra_path:
+        command.extend(["--extra-path", extra])
+    return command
 
 
 def main() -> int:

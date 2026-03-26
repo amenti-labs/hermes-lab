@@ -10,8 +10,7 @@ The lab now treats local model-backed mutation as a higher-level contract than a
 
 Instead of hardcoding:
 
-- `python3 scripts/openai_mutation_adapter.py ...`
-- `python3 scripts/claude_mutation_adapter.py ...`
+- Custom mutation commands via `executor_command` or `mutation_command`
 
 you can describe the mutation worker with generic spec fields:
 
@@ -40,8 +39,7 @@ If `mutation_command` is omitted and `agent_provider` is set, the lab synthesize
 
 Today that means:
 
-- OpenAI routes to `scripts/openai_mutation_adapter.py`
-- Claude routes to `scripts/claude_mutation_adapter.py`
+- Provider routing is handled by `scripts/local_agent_mutation.py`
 
 The reference executor and the rest of the lab do not need to change when you switch providers.
 

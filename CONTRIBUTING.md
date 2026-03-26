@@ -35,7 +35,7 @@ Thanks for your interest in contributing!
 ## Adding a New Mutation Adapter
 
 1. Create `scripts/<provider>_mutation_adapter.py`.
-2. Follow the pattern in `scripts/openai_mutation_adapter.py`.
+2. Follow the pattern in `scripts/local_agent_mutation.py`.
 3. Create a matching template in `templates/`.
 4. Document it in `docs/`.
 

@@ -11,8 +11,6 @@
     "docs/MULTI-FIDELITY.md",
     "docs/LOCAL-AGENT-MUTATION.md",
     "docs/DISPATCH.md",
-    "docs/OPENAI-MUTATION-ADAPTER.md",
-    "docs/CLAUDE-MUTATION-ADAPTER.md",
     "docs/OPERATIONS.md"
   ],
   "data_root_env_var": "HERMES_LAB_DATA_ROOT",
@@ -34,8 +32,6 @@
     "create_code_autoresearch": "python3 scripts/labctl.py create templates/code-autoresearch.yaml",
     "create_local_agent_autoresearch": "python3 scripts/labctl.py create templates/local-agent-autoresearch.yaml",
     "create_multifidelity_autoresearch": "python3 scripts/labctl.py create templates/multifidelity-autoresearch.yaml",
-    "create_openai_codex_autoresearch": "python3 scripts/labctl.py create templates/openai-codex-autoresearch.yaml",
-    "create_claude_autoresearch": "python3 scripts/labctl.py create templates/claude-autoresearch.yaml",
     "create_research_sprint": "python3 scripts/labctl.py create templates/research-sprint.yaml",
     "run_once": "python3 scripts/labctl.py run-once --max-runs 1",
     "run_once_for_class": "python3 scripts/labctl.py run-once --max-runs 1 --executor-class <executor_class>",

@@ -93,7 +93,7 @@ Metric commands should print either:
 
 Mutation commands can be any shell command that operates inside the sandbox workspace.
 
-Repo-shipped commands also work. If the command points at a repo-relative script such as `python3 scripts/openai_mutation_adapter.py`, the reference executor resolves that path against the lab repo before execution.
+Repo-shipped commands also work. If the command points at a repo-relative script such as `python3 scripts/local_agent_mutation.py`, the reference executor resolves that path against the lab repo before execution.
 
 ## Recommended first use
 
@@ -108,5 +108,4 @@ Then keep `promotion_strategy: patch-only` until the task is stable. Move to `ap
 
 For model-backed code loops, see:
 
-- `templates/openai-codex-autoresearch.yaml` and `docs/OPENAI-MUTATION-ADAPTER.md`
-- `templates/claude-autoresearch.yaml` and `docs/CLAUDE-MUTATION-ADAPTER.md`
+- `templates/local-agent-autoresearch.yaml` and `docs/LOCAL-AGENT-MUTATION.md`

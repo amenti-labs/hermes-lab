@@ -94,9 +94,7 @@ Read these in order when you are pointed at the repo root:
 5. `docs/MULTI-FIDELITY.md`
 6. `docs/LOCAL-AGENT-MUTATION.md`
 7. `docs/DISPATCH.md`
-8. `docs/OPENAI-MUTATION-ADAPTER.md`
-9. `docs/CLAUDE-MUTATION-ADAPTER.md`
-10. `docs/OPERATIONS.md`
+8. `docs/OPERATIONS.md`
 
 If a lab data root already exists, then read:
 
@@ -116,8 +114,6 @@ python3 scripts/labctl.py create templates/autoresearch-generic.yaml
 python3 scripts/labctl.py create templates/code-autoresearch.yaml
 python3 scripts/labctl.py create templates/local-agent-autoresearch.yaml
 python3 scripts/labctl.py create templates/multifidelity-autoresearch.yaml
-python3 scripts/labctl.py create templates/openai-codex-autoresearch.yaml
-python3 scripts/labctl.py create templates/claude-autoresearch.yaml
 python3 scripts/labctl.py create templates/research-sprint.yaml
 python3 scripts/labctl.py run-once --max-runs 1
 python3 scripts/labctl.py run-once --max-runs 1 --executor-class jetson-orin
