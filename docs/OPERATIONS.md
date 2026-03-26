@@ -95,7 +95,7 @@ python3 scripts/labctl.py watchdog --repair
 
 These wrappers call the CLI:
 
-- `bash scripts/init.sh`
+- `python3 scripts/labctl.py init`
 - `bash scripts/run-cycle.sh`
 - `bash scripts/write-digest.sh`
 - `bash scripts/write-weekly-digest.sh`

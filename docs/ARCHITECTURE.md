@@ -111,7 +111,7 @@ Generalized autoresearch fields such as `workspace_root`, `mutable_paths`, `read
 
 The shipped `scripts/reference_executor.py` is the first concrete adapter. It runs mutations in a sandbox, evaluates a metric, records a decision artifact, and can optionally apply a winning patch back to the original git workspace.
 
-For local model-backed mutation, the preferred abstraction is now the generic `agent_provider` contract. The lab synthesizes `scripts/local_agent_mutation.py`, which then routes to a concrete provider adapter such as OpenAI or Claude without changing the core scheduler/executor path.
+For local model-backed mutation, the preferred abstraction is now the generic `agent_provider` contract. The lab synthesizes `scripts/local_agent_mutation.py`, which then routes to a concrete provider adapter without changing the core scheduler/executor path. Custom adapters are auto-discovered from `scripts/<provider>_mutation_adapter.py`.
 
 The lab now also supports multi-fidelity execution inside one experiment. A single experiment can move between tiers such as `proxy`, `validation`, and `final`, with tier-specific command overrides and executor classes. This keeps cheap screening runs and expensive finalist runs in one stable experiment history instead of splitting them into unrelated tasks.
 

@@ -55,6 +55,7 @@ labctl swarm <exp_id> --strategies random perturb bayesian evolution -n 40
 | `perturb`  | You have a good baseline and want to refine nearby       |
 | `bayesian` | 10+ trials done, want smarter suggestions (needs optuna) |
 | `evolution` | Large search space, population-based (needs nevergrad)  |
+| `tree`      | AIDE-style tree search: branch new ideas or improve best |
 | `llm`      | LLM reads SUMMARY.md/NEXT.md and proposes (cron mode)   |
 
 ### Search space

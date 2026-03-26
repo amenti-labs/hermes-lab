@@ -30,7 +30,7 @@ class TestDeepMergeParams:
         assert config["x"] == 10
         assert config["nested"]["x"] == 2  # untouched
 
-    def test_grokking_config(self):
+    def test_nested_config_merge(self):
         config = {
             "model": {"d_model": 128, "n_heads": 4, "dropout": 0.0},
             "training": {"learning_rate": 1e-3, "weight_decay": 1.0},

@@ -7,7 +7,7 @@ Four ways to run experiments, all using the same dispatch loop underneath.
 ### 1. Cron (existing)
 Agent runs every N minutes autonomously via Hermes cron jobs.
 ```
-# Already configured as cron job b820d0cc7607
+# Can be configured as a cron job for autonomous background runs
 ```
 
 ### 2. Burst
