@@ -488,8 +488,7 @@ class LabPaths:
 def bootstrap_root_docs(paths: LabPaths) -> None:
     if not paths.readme_first.exists():
         save_text(paths.readme_first, render_template("README-FIRST.md"))
-    if not paths.agent_entry.exists():
-        save_text(paths.agent_entry, render_template("AGENT_ENTRY.md"))
+    # AGENT_ENTRY.md removed — README-FIRST.md is the canonical ingress
     if not paths.program_md.exists():
         save_text(paths.program_md, render_template("PROGRAM.md"))
     if not paths.changelog_md.exists():

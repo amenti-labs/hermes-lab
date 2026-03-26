@@ -1,6 +1,6 @@
 # Hermes Lab Runner Modes
 
-Four ways to run experiments, all using the same dispatch loop underneath.
+Four ways to run experiments. Burst, guided, and swarm use the dispatch protocol internally. Cron uses `run-once` directly.
 
 ## Modes
 
@@ -87,15 +87,4 @@ Flat params are deep-merged into nested configs (e.g., `weight_decay` finds
 --worker name          Worker name in logs
 ```
 
-## Architecture
 
-```
-labctl burst/guided/swarm
-  -> lab/runner.py (scheduler)
-    -> lab/strategies.py (ask/tell interface)
-    -> lab/blackboard.py (SQLite coordination, swarm only)
-    -> lab/core.py (dispatch_agent_next + dispatch_agent_submit)
-```
-
-All modes reuse the existing dispatch loop. Errors are caught, stale state is
-cleaned up, and the next iteration proceeds.

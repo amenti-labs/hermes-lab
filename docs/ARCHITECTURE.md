@@ -87,7 +87,7 @@ Fresh agents should read:
 7. `experiments/<id>/NEXT.md`
 8. `experiments/<id>/SPEC.yaml` if they need more detail
 
-`README-FIRST.md` and `AGENT_ENTRY.md` exist at the root as the ingress card.
+`README-FIRST.md` exists at the data root as the ingress card.
 
 ## Safety Properties
 
@@ -99,7 +99,7 @@ Fresh agents should read:
 
 ## Execution Model
 
-The repo currently supports two execution modes:
+The repo supports two execution backends:
 
 1. Built-in stub execution
    Use this while wiring the lab. It produces sealed run bundles and keeps the reducer, digests, and lease path working.

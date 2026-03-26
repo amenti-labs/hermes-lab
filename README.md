@@ -92,7 +92,6 @@ These are independent. Your workspace might be `~/projects/my-model` while the d
 ```text
 $HERMES_LAB_DATA_ROOT/
 ├── README-FIRST.md
-├── AGENT_ENTRY.md
 ├── LAB-STATUS.md
 ├── LAB-INDEX.json
 ├── PROGRAM.md
@@ -129,7 +128,7 @@ $HERMES_LAB_DATA_ROOT/
 
 ## Search Space
 
-Every workspace needs a `search_space.json`:
+Workspaces using burst, guided, or swarm modes need a `search_space.json`:
 
 ```json
 {
