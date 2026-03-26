@@ -1,5 +1,7 @@
-# Personal experiment data (the data root is user-specific, never committed)
+# Lab data roots (user-specific, never committed)
 *-lab-data/
+lab-data/
+demo-data/
 
 # User workspaces (contain experiment code, venvs, training artifacts)
 workspaces/

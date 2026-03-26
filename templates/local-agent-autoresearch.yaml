@@ -1,5 +1,5 @@
 # Create `.mutation.md` in the target workspace with the current mutation brief.
-# Swap `agent_provider` between `openai`, `claude`, or `stub` without changing the lab core.
+# Swap `agent_provider` to any custom adapter or `stub` without changing the lab core.
 # `stub` is the safe default so the lab remains runnable without provider credentials.
 # Keep `promotion_strategy: patch-only` until the validator and prompt are stable.
 id: example-local-agent-autoresearch

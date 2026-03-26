@@ -49,7 +49,11 @@
     "digest": "python3 scripts/labctl.py digest",
     "weekly_digest": "python3 scripts/labctl.py weekly-digest",
     "refresh": "python3 scripts/labctl.py refresh",
-    "watchdog_repair": "python3 scripts/labctl.py watchdog --repair"
+    "watchdog_repair": "python3 scripts/labctl.py watchdog --repair",
+    "recover": "python3 scripts/labctl.py recover",
+    "burst": "python3 scripts/labctl.py burst <exp_id> --strategy <strategy> -n <count>",
+    "guided": "python3 scripts/labctl.py guided <exp_id> --strategy <strategy> -n <count>",
+    "swarm": "python3 scripts/labctl.py swarm <exp_id> --strategies <s1> <s2> -n <count>"
   },
   "experiment_contract": {
     "canonical_files": [

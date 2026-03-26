@@ -2,7 +2,7 @@
 """Provider-agnostic local mutation adapter for Hermes Lab.
 
 This wrapper keeps the lab contract stable while routing to a concrete local
-provider adapter such as OpenAI or Claude.
+provider adapter (e.g. scripts/<provider>_mutation_adapter.py).
 """
 from __future__ import annotations
 
