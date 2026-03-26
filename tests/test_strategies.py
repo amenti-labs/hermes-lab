@@ -2,7 +2,7 @@
 import pytest
 from lab.strategies import (
     SearchSpace, ParamBound, Trial,
-    RandomStrategy, PerturbStrategy, BayesianStrategy,
+    RandomStrategy, PerturbStrategy, BayesianStrategy, TreeStrategy,
     get_strategy, STRATEGIES,
 )
 
@@ -112,6 +112,70 @@ class TestBayesianStrategy:
             if "optuna not installed" in str(e):
                 pytest.skip("optuna not installed")
             raise
+
+
+class TestTreeStrategy:
+    def test_tree_ask_returns_valid_params(self, simple_space):
+        strategy = TreeStrategy(seed=42)
+        params = strategy.ask(simple_space, [])
+        # Should contain the space params (plus __tree_meta)
+        assert "x" in params
+        assert 0.0 <= params["x"] <= 10.0
+        assert 0.1 <= params["y"] <= 1.0
+        assert isinstance(params["z"], int)
+        assert 1 <= params["z"] <= 100
+
+    def test_tree_branches_from_best(self, simple_space):
+        # Build a history with metadata so tree can reason about it
+        history = [
+            Trial(params={"x": 5.0, "y": 0.5, "z": 50}, score=0.9,
+                  strategy="tree", metadata={"parent_idx": None, "depth": 0, "action": "branch"}),
+            Trial(params={"x": 2.0, "y": 0.2, "z": 20}, score=0.3,
+                  strategy="tree", metadata={"parent_idx": None, "depth": 0, "action": "branch"}),
+        ]
+        # Force no branching so we improve the best node
+        strategy = TreeStrategy(branch_prob=0.0, seed=42)
+        params = strategy.ask(simple_space, history)
+        assert "x" in params
+        assert 0.0 <= params["x"] <= 10.0
+
+    def test_tree_metadata_tracks_lineage(self, simple_space):
+        strategy = TreeStrategy(seed=42)
+        # First call — root node
+        params = strategy.ask(simple_space, [])
+        meta = params.pop("__tree_meta")
+        assert meta["parent_idx"] is None
+        assert meta["depth"] == 0
+        assert meta["action"] in ("branch", "improve")
+
+        # Second call with history
+        history = [
+            Trial(params=params, score=0.7, strategy="tree", metadata=meta),
+        ]
+        params2 = strategy.ask(simple_space, history)
+        meta2 = params2.pop("__tree_meta")
+        assert "parent_idx" in meta2
+        assert "depth" in meta2
+        assert meta2["action"] in ("branch", "improve")
+
+    def test_tree_registered(self):
+        assert "tree" in STRATEGIES
+        assert STRATEGIES["tree"] is TreeStrategy
+
+    def test_tree_respects_bounds(self, simple_space):
+        strategy = TreeStrategy(seed=7)
+        history: list[Trial] = []
+        for i in range(20):
+            params = strategy.ask(simple_space, history)
+            meta = params.pop("__tree_meta")
+            assert 0.0 <= params["x"] <= 10.0
+            assert 0.1 <= params["y"] <= 1.0
+            assert isinstance(params["z"], int)
+            assert 1 <= params["z"] <= 100
+            history.append(Trial(
+                params=params, score=float(i) / 20,
+                strategy="tree", metadata=meta,
+            ))
 
 
 class TestGetStrategy:

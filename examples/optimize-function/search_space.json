@@ -1,0 +1,4 @@
+{
+  "x": {"low": -5.0, "high": 5.0, "type": "float"},
+  "y": {"low": -5.0, "high": 5.0, "type": "float"}
+}

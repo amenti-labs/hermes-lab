@@ -1,0 +1,32 @@
+id: optimize-rosenbrock
+mode: autoresearch-local-agent
+goal: Minimize the Rosenbrock function by searching over x and y
+metric: score
+metric_direction: maximize
+priority: normal
+autonomous: true
+time_budget_minutes: 5
+max_iterations_total: 50
+max_iterations_per_run: 1
+workspace_root: examples/optimize-function
+executor_command: python3 evaluate.py
+agent_provider: stub
+agent_model: stub
+agent_effort: low
+validation_command: ""
+acceptance_rule: Keep the run if the score improves versus best-so-far
+promotion_strategy: patch-only
+workspace_mode: auto
+require_clean_workspace: false
+constraints:
+  - bounded numeric optimization only
+  - no external API calls
+read_only_paths:
+  - README.md
+  - spec.yaml
+mutable_paths:
+  - train_config.json
+  - metrics.json
+egress_files:
+  - metrics.json
+  - stdout.log

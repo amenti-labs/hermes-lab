@@ -65,6 +65,7 @@ python3 scripts/labctl.py swarm <exp_id> --strategies random perturb bayesian -n
 | `perturb` | Refine near a good baseline |
 | `bayesian` | 10+ trials done, want smarter suggestions (needs `optuna`) |
 | `evolution` | Large search space, population-based (needs `nevergrad`) |
+| `tree` | AIDE-style tree search: branch new ideas or improve best ones |
 | `llm` | LLM reads summaries and proposes next params |
 
 ## Templates
@@ -219,11 +220,24 @@ python3 scripts/labctl.py guided <id> -n N         # Guided mode
 python3 scripts/labctl.py swarm <id> -n N          # Swarm mode
 ```
 
+## Try It Now
+
+```bash
+export HERMES_LAB_DATA_ROOT=./demo-data
+python3 scripts/labctl.py init
+python3 scripts/labctl.py create examples/optimize-function/spec.yaml
+python3 scripts/labctl.py burst optimize-rosenbrock --strategy random -n 20
+python3 scripts/labctl.py status
+```
+
+See [examples/optimize-function/](examples/optimize-function/) for details.
+
 ## Requirements
 
 - Python 3.10+
 - No required dependencies for core functionality
 - Optional: `optuna` (Bayesian strategy), `nevergrad` (evolution strategy)
+- Tree strategy works out of the box (no dependencies)
 
 ## License
 

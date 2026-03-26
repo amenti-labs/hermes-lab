@@ -282,6 +282,136 @@ class EvolutionStrategy(Strategy):
             self._pending = None
 
 
+class TreeStrategy(Strategy):
+    """AIDE-style tree search: branch (random) or improve (perturb) nodes.
+
+    Stateless — rebuilds the tree from history on each ask() call.
+    Stores lineage in Trial.metadata with keys: parent_idx, depth, action.
+    """
+    name = "tree"
+
+    def __init__(
+        self,
+        branch_prob: float = 0.3,
+        exploration_weight: float = 1.0,
+        max_depth: int = 10,
+        seed: int | None = None,
+    ):
+        self._branch_prob = branch_prob
+        self._exploration_weight = exploration_weight
+        self._max_depth = max_depth
+        self._rng = random.Random(seed)
+
+    # -- helpers -------------------------------------------------------------
+
+    @staticmethod
+    def _random_params(space: SearchSpace, rng: random.Random) -> dict[str, Any]:
+        """Sample uniformly random params within bounds."""
+        params: dict[str, Any] = {}
+        for p in space.params:
+            if p.log_scale:
+                val = math.exp(rng.uniform(math.log(p.low), math.log(p.high)))
+            else:
+                val = rng.uniform(p.low, p.high)
+            if p.step:
+                val = round(val / p.step) * p.step
+            if p.param_type == "int":
+                val = int(round(val))
+            params[p.name] = val
+        return params
+
+    @staticmethod
+    def _perturb_params(
+        base: dict[str, Any],
+        space: SearchSpace,
+        rng: random.Random,
+        factor: float = 0.2,
+    ) -> dict[str, Any]:
+        """Gaussian perturbation of *base* within bounds."""
+        params: dict[str, Any] = {}
+        for p in space.params:
+            current = float(base.get(p.name, (p.low + p.high) / 2))
+            if p.log_scale:
+                log_val = math.log(max(current, 1e-12))
+                val = math.exp(log_val + rng.gauss(0, factor))
+            else:
+                val = current + rng.gauss(0, factor * (p.high - p.low))
+            val = max(p.low, min(p.high, val))
+            if p.step:
+                val = round(val / p.step) * p.step
+            if p.param_type == "int":
+                val = int(round(val))
+            params[p.name] = val
+        return params
+
+    def _select_node(self, history: list[Trial]) -> int:
+        """UCB1-based node selection.  Returns index into *history*."""
+        n = len(history)
+        if n == 0:
+            return -1  # no nodes yet
+
+        # Count children per node (how many times a node has been "visited"/expanded)
+        children_count: list[int] = [0] * n
+        for i, t in enumerate(history):
+            pidx = t.metadata.get("parent_idx")
+            if pidx is not None and 0 <= pidx < n:
+                children_count[pidx] += 1
+
+        total = sum(children_count) + n  # total visits proxy
+        ln_total = math.log(max(total, 1))
+
+        best_idx = 0
+        best_ucb = -math.inf
+        for i, t in enumerate(history):
+            score = t.score if t.score is not None else 0.0
+            visits = children_count[i] + 1  # +1 so we never divide by zero
+            ucb = score + self._exploration_weight * math.sqrt(ln_total / visits)
+            if ucb > best_ucb:
+                best_ucb = ucb
+                best_idx = i
+        return best_idx
+
+    # -- ask / tell ----------------------------------------------------------
+
+    def ask(self, space: SearchSpace, history: list[Trial]) -> dict[str, Any]:
+        if not history:
+            # Root node — branch from scratch
+            params = self._random_params(space, self._rng)
+            params["__tree_meta"] = {"parent_idx": None, "depth": 0, "action": "branch"}
+            return params
+
+        selected = self._select_node(history)
+        node = history[selected]
+        depth = node.metadata.get("depth", 0)
+
+        # Count how many times this node has already been improved
+        improve_count = sum(
+            1 for t in history
+            if t.metadata.get("parent_idx") == selected
+            and t.metadata.get("action") == "improve"
+        )
+
+        # Decide: branch or improve
+        do_branch = (
+            self._rng.random() < self._branch_prob
+            or depth >= self._max_depth
+            or improve_count >= 3  # max_improve threshold
+        )
+
+        if do_branch:
+            params = self._random_params(space, self._rng)
+            meta = {"parent_idx": None, "depth": 0, "action": "branch"}
+        else:
+            params = self._perturb_params(node.params, space, self._rng)
+            meta = {"parent_idx": selected, "depth": depth + 1, "action": "improve"}
+
+        params["__tree_meta"] = meta
+        return params
+
+    def tell(self, params: dict[str, Any], score: float) -> None:
+        pass  # stateless — tree is rebuilt from history
+
+
 # ---------------------------------------------------------------------------
 # Strategy registry
 # ---------------------------------------------------------------------------
@@ -291,6 +421,7 @@ STRATEGIES: dict[str, type[Strategy]] = {
     "perturb": PerturbStrategy,
     "bayesian": BayesianStrategy,
     "evolution": EvolutionStrategy,
+    "tree": TreeStrategy,
 }
 
 

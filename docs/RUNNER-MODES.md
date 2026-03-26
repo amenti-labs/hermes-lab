@@ -14,22 +14,22 @@ Agent runs every N minutes autonomously via Hermes cron jobs.
 Run N iterations back-to-back in the current session. Strategies auto-generate params.
 ```bash
 # Random search, 20 iterations
-labctl burst grokking-entropy-search --strategy random -n 20
+labctl burst my-experiment --strategy random -n 20
 
 # Bayesian optimization (Optuna TPE)
-labctl burst grokking-entropy-search --strategy bayesian -n 50
+labctl burst my-experiment --strategy bayesian -n 50
 
 # Perturb best (PBT-inspired)
-labctl burst grokking-entropy-search --strategy perturb -n 30
+labctl burst my-experiment --strategy perturb -n 30
 
 # With custom search space
-labctl burst grokking-entropy-search --strategy bayesian -n 20 --search-space /path/to/space.json
+labctl burst my-experiment --strategy bayesian -n 20 --search-space /path/to/space.json
 ```
 
 ### 3. Guided
 Like burst but pauses for your approval before each iteration.
 ```bash
-labctl guided grokking-entropy-search --strategy perturb -n 10
+labctl guided my-experiment --strategy perturb -n 10
 ```
 At each step you see the proposed params and can:
 - `Y` or Enter to approve
@@ -40,10 +40,10 @@ At each step you see the proposed params and can:
 Multiple strategies rotate, coordinating via a shared SQLite blackboard.
 ```bash
 # Default strategies: random, perturb, bayesian
-labctl swarm grokking-entropy-search -n 30
+labctl swarm my-experiment -n 30
 
 # Custom strategy mix
-labctl swarm grokking-entropy-search --strategies random perturb bayesian evolution -n 40
+labctl swarm my-experiment --strategies random perturb bayesian evolution -n 40
 ```
 
 The blackboard tracks all trials, claims (to prevent duplicate work), and a feed
@@ -57,6 +57,7 @@ of discoveries. Each strategy sees what the others have tried.
 | perturb   | Perturb current best params (PBT-style)   | nothing      |
 | bayesian  | Optuna TPE-guided suggestions             | `pip install optuna` |
 | evolution | Nevergrad CMA-ES optimization             | `pip install nevergrad` |
+| tree      | AIDE-style tree search: branch or improve  | none                    |
 | llm       | Pass-through for LLM-driven mutations     | agent callback |
 
 ## Search Space

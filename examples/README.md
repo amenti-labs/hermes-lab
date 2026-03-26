@@ -1,5 +1,23 @@
 # Examples
 
+## Recommended: Optimize a Function (no API keys needed)
+
+The [optimize-function](optimize-function/) example runs end-to-end in
+under 2 minutes with zero external dependencies.  It uses burst mode to
+minimize the Rosenbrock function via random search.
+
+```bash
+export HERMES_LAB_DATA_ROOT=./demo-data
+python3 scripts/labctl.py init
+python3 scripts/labctl.py create examples/optimize-function/spec.yaml
+python3 scripts/labctl.py burst optimize-rosenbrock --strategy random -n 20
+python3 scripts/labctl.py status
+```
+
+See [examples/optimize-function/README.md](optimize-function/README.md) for details.
+
+---
+
 ## Quick: Run a basic experiment
 
 ```bash
