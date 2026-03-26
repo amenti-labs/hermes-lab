@@ -1,0 +1,11 @@
+{
+  "data_root": "./lab-data",
+  "digest_hour_local": 9,
+  "weekly_digest_weekday_local": 1,
+  "max_runs_per_cycle": 3,
+  "lease_ttl_buffer_seconds": 120,
+  "watchdog_stale_status_seconds": 7200,
+  "minimum_free_space_gb": 5,
+  "default_model_hint": "default",
+  "roles": ["scout", "researcher", "critic", "synthesizer"]
+}

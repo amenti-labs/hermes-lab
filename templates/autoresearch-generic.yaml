@@ -1,0 +1,50 @@
+id: example-autoresearch-loop
+mode: autoresearch-loop
+goal: Improve a system under a fixed time budget
+metric: primary_score
+metric_direction: maximize
+priority: normal
+autonomous: true
+cadence: every-10-minutes
+time_budget_minutes: 10
+max_iterations_total: 20
+max_iterations_per_run: 1
+workspace_root: /absolute/path/to/workspace
+setup_command: ""
+baseline_command: ""
+executor_command: ""
+mutation_command: ""
+validation_command: ""
+acceptance_rule: Keep the run if the primary metric improves versus best-so-far and the complexity cost is justified
+promotion_strategy: patch-only
+workspace_mode: auto
+require_clean_workspace: false
+constraints:
+  - keep the experiment bounded and reversible
+  - record one primary metric per run
+  - do not mutate read-only surfaces
+read_only_paths:
+  - README.md
+  - docs/
+mutable_paths:
+  - target-file-or-workspace/
+ingress_files:
+  - LAB-STATUS.md
+  - PROGRAM.md
+  - RUNBOOK.md
+  - SUMMARY.md
+  - NEXT.md
+  - SPEC.yaml
+egress_files:
+  - RESULT.md
+  - metrics.json
+  - stdout.log
+  - stderr.log
+artifacts_expected:
+  - diff.patch
+  - run.log
+worker_roles:
+  - scout
+  - researcher
+  - critic
+  - synthesizer

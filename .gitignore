@@ -1,0 +1,41 @@
+# Personal experiment data (the data root is user-specific, never committed)
+*-lab-data/
+sofi-lab-data/
+
+# User workspaces (contain experiment code, venvs, training artifacts)
+workspaces/
+
+# Dev state
+.lab-dev/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+.venv/
+venv/
+
+# macOS
+.DS_Store
+._*
+
+# Pytest
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# SQLite blackboard databases (created at runtime)
+*.db
+*.db-journal

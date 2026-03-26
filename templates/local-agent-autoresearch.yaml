@@ -1,0 +1,62 @@
+# Create `.mutation.md` in the target workspace with the current mutation brief.
+# Swap `agent_provider` between `openai`, `claude`, or `stub` without changing the lab core.
+# `stub` is the safe default so the lab remains runnable without provider credentials.
+# Keep `promotion_strategy: patch-only` until the validator and prompt are stable.
+id: example-local-agent-autoresearch
+mode: autoresearch-local-agent
+goal: Improve a codebase metric using a bounded local agent mutation loop
+metric: validation_score
+metric_direction: maximize
+priority: normal
+autonomous: true
+cadence: every-10-minutes
+time_budget_minutes: 10
+max_iterations_total: 20
+max_iterations_per_run: 1
+workspace_root: /absolute/path/to/clean/git/workspace
+setup_command: ""
+baseline_command: ""
+executor_command: python3 scripts/reference_executor.py
+agent_provider: stub
+agent_model: stub
+agent_effort: medium
+agent_instruction_file: .mutation.md
+validation_command: ""
+acceptance_rule: Compare the candidate metric to best-so-far, keep only strict validator improvements, and emit local agent artifacts for every run
+promotion_strategy: patch-only
+workspace_mode: git-clone
+require_clean_workspace: true
+constraints:
+  - keep the mutable surface narrow
+  - keep the validator independent from the model
+  - prefer small coherent edits over broad refactors
+  - use patch-only until the loop is trusted
+read_only_paths:
+  - README.md
+  - pyproject.toml
+  - docs/
+mutable_paths:
+  - src/
+  - tests/
+ingress_files:
+  - LAB-STATUS.md
+  - PROGRAM.md
+  - RUNBOOK.md
+  - SUMMARY.md
+  - NEXT.md
+  - SPEC.yaml
+egress_files:
+  - RESULT.md
+  - metrics.json
+  - stdout.log
+  - stderr.log
+artifacts_expected:
+  - diff.patch
+  - diffstat.txt
+  - decision.json
+  - local-agent/selection.json
+  - local-agent/command.txt
+  - local-agent/stdout.log
+  - local-agent/stderr.log
+worker_roles:
+  - researcher

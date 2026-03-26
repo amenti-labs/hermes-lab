@@ -1,0 +1,52 @@
+id: example-code-autoresearch
+mode: autoresearch-code
+goal: Improve a codebase metric in a bounded git workspace
+metric: validation_score
+metric_direction: maximize
+priority: normal
+autonomous: true
+cadence: every-10-minutes
+time_budget_minutes: 10
+max_iterations_total: 20
+max_iterations_per_run: 1
+workspace_root: /absolute/path/to/clean/git/workspace
+setup_command: ""
+baseline_command: ""
+executor_command: python3 scripts/reference_executor.py
+mutation_command: ""
+validation_command: ""
+acceptance_rule: Compare the candidate metric to best-so-far, keep only strict improvements, and save a patch artifact for every run
+promotion_strategy: patch-only
+workspace_mode: git-clone
+require_clean_workspace: true
+constraints:
+  - run only in a clean git workspace
+  - keep edits inside the declared mutable paths
+  - record the metric and patch artifact on every iteration
+read_only_paths:
+  - README.md
+  - docs/
+mutable_paths:
+  - src/
+  - tests/
+ingress_files:
+  - LAB-STATUS.md
+  - PROGRAM.md
+  - RUNBOOK.md
+  - SUMMARY.md
+  - NEXT.md
+  - SPEC.yaml
+egress_files:
+  - RESULT.md
+  - metrics.json
+  - stdout.log
+  - stderr.log
+artifacts_expected:
+  - diff.patch
+  - diffstat.txt
+  - decision.json
+worker_roles:
+  - scout
+  - researcher
+  - critic
+  - synthesizer

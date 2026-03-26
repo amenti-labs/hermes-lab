@@ -1,0 +1,44 @@
+id: example-research-sprint
+mode: research-sprint
+goal: Find non-obvious opportunities in a domain
+metric: relevant_findings
+metric_direction: maximize
+constraints:
+  - avoid saturated ideas
+  - prefer benchmarkable outputs
+cadence: every-10-minutes
+max_iterations_total: 20
+max_iterations_per_run: 2
+time_budget_minutes: 10
+stop_conditions:
+  - plateau_after_consecutive_low_signal_runs: 3
+  - hard_stop_after_days: 14
+escalate_when:
+  - breakthrough_found
+  - blocked_on_external_access
+  - metric_regression_3_consecutive
+outputs:
+  - daily_digest
+  - final_ranked_memo
+ingress_files:
+  - LAB-STATUS.md
+  - PROGRAM.md
+  - RUNBOOK.md
+  - SUMMARY.md
+  - NEXT.md
+egress_files:
+  - RESULT.md
+  - metrics.json
+  - stdout.log
+  - stderr.log
+artifacts_expected:
+  - notes.md
+worker_roles:
+  - scout
+  - researcher
+  - critic
+  - synthesizer
+priority: normal
+autonomous: true
+# Optional:
+# executor_command: /absolute/path/to/worker.sh

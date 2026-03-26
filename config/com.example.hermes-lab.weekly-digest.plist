@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.example.hermes-lab.weekly-digest</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>__REPO_ROOT__/scripts/write-weekly-digest.sh</string>
+  </array>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Weekday</key>
+    <integer>1</integer>
+    <key>Hour</key>
+    <integer>8</integer>
+    <key>Minute</key>
+    <integer>55</integer>
+  </dict>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HERMES_LAB_DATA_ROOT</key>
+    <string>__DATA_ROOT__</string>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>/tmp/hermes-lab-weekly-digest.log</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/hermes-lab-weekly-digest.err</string>
+</dict>
+</plist>

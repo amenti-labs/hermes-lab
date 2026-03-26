@@ -1,0 +1,73 @@
+# Generic multi-fidelity loop.
+# Naming convention: any overridable field can be specialized as `<tier>_<field>`.
+# Example: `proxy_validation_command`, `final_executor_class`, `proxy_promotion_strategy`.
+id: example-multifidelity-loop
+mode: autoresearch-multifidelity
+goal: Improve a system using cheap proxy runs before expensive final validation
+metric: primary_score
+metric_direction: maximize
+priority: normal
+autonomous: true
+cadence: every-10-minutes
+time_budget_minutes: 10
+max_iterations_total: 20
+max_iterations_per_run: 1
+fidelity_tiers:
+  - proxy
+  - validation
+  - final
+initial_fidelity_tier: proxy
+fidelity_promotion_rule: manual
+promote_after_successes: 2
+executor_class: default
+workspace_root: /absolute/path/to/workspace
+setup_command: ""
+baseline_command: ""
+executor_command: ""
+mutation_command: ""
+validation_command: ""
+acceptance_rule: Keep the run if the primary metric improves versus best-so-far and the complexity cost is justified
+promotion_strategy: patch-only
+workspace_mode: auto
+require_clean_workspace: false
+constraints:
+  - keep the experiment bounded and reversible
+  - keep proxy and final evaluators explicitly separated
+  - do not mutate read-only surfaces
+read_only_paths:
+  - README.md
+  - docs/
+mutable_paths:
+  - target-file-or-workspace/
+ingress_files:
+  - LAB-STATUS.md
+  - PROGRAM.md
+  - RUNBOOK.md
+  - SUMMARY.md
+  - NEXT.md
+  - SPEC.yaml
+egress_files:
+  - RESULT.md
+  - metrics.json
+  - stdout.log
+  - stderr.log
+artifacts_expected:
+  - run.log
+worker_roles:
+  - scout
+  - researcher
+  - critic
+  - synthesizer
+
+# Tier-specific overrides:
+proxy_executor_class: cheap-proxy
+proxy_time_budget_minutes: 5
+proxy_promotion_strategy: patch-only
+
+validation_executor_class: trusted-local
+validation_time_budget_minutes: 15
+validation_promotion_strategy: patch-only
+
+final_executor_class: expensive-final
+final_time_budget_minutes: 60
+final_promotion_strategy: apply-on-accept
