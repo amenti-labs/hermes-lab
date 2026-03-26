@@ -10,7 +10,7 @@ _Root-folder harness contract for generic coding and research agents_
 <repo-root>/
   scripts/        lab engine (labctl.py)
   lab-data/  experiments, dispatch, metrics
-  workspaces/     experiment code (e.g. grokking-entropy/)
+  workspaces/     experiment code (e.g. my-experiment/)
   templates/      experiment SPEC templates
   docs/           reference documentation
 ```

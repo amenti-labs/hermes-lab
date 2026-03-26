@@ -20,7 +20,6 @@ from typing import Any
 
 SCHEMA_VERSION = 1
 DEFAULT_DATA_ROOT = Path("./lab-data")
-DEFAULT_VOLUME_ROOT = DEFAULT_DATA_ROOT.parent
 REPO_ROOT = Path(__file__).resolve().parent.parent
 TEMPLATE_ROOT = REPO_ROOT / "templates"
 
@@ -162,18 +161,8 @@ def parse_simple_yaml(text: str) -> dict[str, Any]:
     return result
 
 
-def is_default_data_root(root: Path) -> bool:
-    return root.expanduser() == DEFAULT_DATA_ROOT
-
-
 def validate_data_root(root: Path, *, create: bool) -> Path:
-    root = root.expanduser()
-    if is_default_data_root(root):
-        if not DEFAULT_VOLUME_ROOT.exists() or not os.path.ismount(DEFAULT_VOLUME_ROOT):
-            raise RuntimeError(
-                "Default data root is unavailable. "
-                "Mount the SSD or set HERMES_LAB_DATA_ROOT to an explicit local path."
-            )
+    root = root.expanduser().resolve()
     if create:
         root.mkdir(parents=True, exist_ok=True)
     elif not root.exists():
@@ -263,7 +252,7 @@ def metric_value(metrics: dict[str, Any]) -> float | None:
 
 
 def executor_profile() -> str:
-    return os.environ.get("HERMES_LAB_EXECUTOR_PROFILE", "mac-mini")
+    return os.environ.get("HERMES_LAB_EXECUTOR_PROFILE", "default")
 
 
 def spec_list(spec: dict[str, Any], key: str) -> list[str]:

@@ -617,16 +617,16 @@ Strategies:
 
 Examples:
   # 20 iterations of random search
-  python -m lab.runner burst grokking-entropy-search --strategy random -n 20
+  python -m lab.runner burst my-experiment --strategy random -n 20
 
   # Bayesian optimization with Optuna
-  python -m lab.runner burst grokking-entropy-search --strategy bayesian -n 50
+  python -m lab.runner burst my-experiment --strategy bayesian -n 50
 
   # Swarm with 3 strategies
-  python -m lab.runner swarm grokking-entropy-search --strategies random perturb bayesian -n 30
+  python -m lab.runner swarm my-experiment --strategies random perturb bayesian -n 30
 
   # Guided mode (interactive approval)
-  python -m lab.runner guided grokking-entropy-search --strategy perturb -n 10
+  python -m lab.runner guided my-experiment --strategy perturb -n 10
         """,
     )
     parser.add_argument("mode", choices=["burst", "guided", "swarm"])

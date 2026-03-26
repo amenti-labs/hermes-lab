@@ -2,15 +2,12 @@ from __future__ import annotations
 
 import os
 import json
-import shlex
 import shutil
 import subprocess
 import tempfile
 import textwrap
-import threading
 import unittest
 from datetime import timedelta
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 from lab.core import (
@@ -39,114 +36,6 @@ from lab.core import (
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-
-
-class FakeOpenAIServer:
-    def __init__(self, responses: list[dict[str, object]]) -> None:
-        self.responses = list(responses)
-        self.requests: list[dict[str, object]] = []
-        self._server: ThreadingHTTPServer | None = None
-        self._thread: threading.Thread | None = None
-
-    @property
-    def base_url(self) -> str:
-        assert self._server is not None
-        host, port = self._server.server_address
-        return f"http://{host}:{port}/v1"
-
-    def start(self) -> None:
-        parent = self
-
-        class Handler(BaseHTTPRequestHandler):
-            def do_POST(self) -> None:  # noqa: N802
-                length = int(self.headers.get("Content-Length", "0"))
-                raw = self.rfile.read(length)
-                payload = json.loads(raw.decode("utf-8"))
-                parent.requests.append({"method": "POST", "path": self.path, "payload": payload})
-                if not parent.responses:
-                    self.send_response(500)
-                    self.end_headers()
-                    self.wfile.write(b'{"error":"no response queued"}')
-                    return
-                response = parent.responses.pop(0)
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json")
-                self.end_headers()
-                self.wfile.write(json.dumps(response).encode("utf-8"))
-
-            def do_GET(self) -> None:  # noqa: N802
-                parent.requests.append({"method": "GET", "path": self.path, "payload": None})
-                if not parent.responses:
-                    self.send_response(404)
-                    self.end_headers()
-                    return
-                response = parent.responses.pop(0)
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json")
-                self.end_headers()
-                self.wfile.write(json.dumps(response).encode("utf-8"))
-
-            def log_message(self, format: str, *args: object) -> None:
-                return
-
-        self._server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
-        self._thread = threading.Thread(target=self._server.serve_forever, daemon=True)
-        self._thread.start()
-
-    def stop(self) -> None:
-        if self._server is not None:
-            self._server.shutdown()
-            self._server.server_close()
-        if self._thread is not None:
-            self._thread.join(timeout=2)
-
-
-class FakeAnthropicServer:
-    def __init__(self, responses: list[dict[str, object]]) -> None:
-        self.responses = list(responses)
-        self.requests: list[dict[str, object]] = []
-        self._server: ThreadingHTTPServer | None = None
-        self._thread: threading.Thread | None = None
-
-    @property
-    def base_url(self) -> str:
-        assert self._server is not None
-        host, port = self._server.server_address
-        return f"http://{host}:{port}"
-
-    def start(self) -> None:
-        parent = self
-
-        class Handler(BaseHTTPRequestHandler):
-            def do_POST(self) -> None:  # noqa: N802
-                length = int(self.headers.get("Content-Length", "0"))
-                raw = self.rfile.read(length)
-                payload = json.loads(raw.decode("utf-8"))
-                parent.requests.append({"method": "POST", "path": self.path, "payload": payload})
-                if not parent.responses:
-                    self.send_response(500)
-                    self.end_headers()
-                    self.wfile.write(b'{"error":"no response queued"}')
-                    return
-                response = parent.responses.pop(0)
-                self.send_response(200)
-                self.send_header("Content-Type", "application/json")
-                self.end_headers()
-                self.wfile.write(json.dumps(response).encode("utf-8"))
-
-            def log_message(self, format: str, *args: object) -> None:
-                return
-
-        self._server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
-        self._thread = threading.Thread(target=self._server.serve_forever, daemon=True)
-        self._thread.start()
-
-    def stop(self) -> None:
-        if self._server is not None:
-            self._server.shutdown()
-            self._server.server_close()
-        if self._thread is not None:
-            self._thread.join(timeout=2)
 
 
 class HermesLabSmokeTests(unittest.TestCase):
@@ -433,22 +322,6 @@ class HermesLabSmokeTests(unittest.TestCase):
         subprocess.run(["git", "add", "."], cwd=workspace, check=True)
         subprocess.run(["git", "commit", "-m", "initial"], cwd=workspace, check=True, capture_output=True, text=True)
         return workspace
-
-    def fake_openai_response(self, plan: dict[str, object]) -> dict[str, object]:
-        return {
-            "id": "resp_test_123",
-            "status": "completed",
-            "output_text": json.dumps(plan),
-        }
-
-    def fake_anthropic_response(self, plan: dict[str, object]) -> dict[str, object]:
-        return {
-            "id": "msg_test_123",
-            "type": "message",
-            "role": "assistant",
-            "stop_reason": "end_turn",
-            "content": [{"type": "text", "text": json.dumps(plan)}],
-        }
 
     def test_full_cycle_builds_run_bundle_and_projections(self) -> None:
         create_experiment(self.paths, self.make_spec("smoke-exp"))

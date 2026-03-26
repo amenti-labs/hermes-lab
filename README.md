@@ -18,7 +18,7 @@ Most ML experiment tools assume you're training models on GPUs. Hermes Lab is **
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-org/hermes-lab.git
+git clone https://github.com/amenti-labs/hermes-lab.git
 cd hermes-lab
 
 # Set your data root (or use the default ./lab-data)

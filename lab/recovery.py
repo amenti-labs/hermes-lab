@@ -40,9 +40,9 @@ def recover(data_root: str | None = None, verbose: bool = True) -> dict:
     """Full lab recovery. Returns a report dict."""
     root = data_root or DATA_ROOT
     
-    # Check if T7 is mounted
+    # Check if data root exists
     if not Path(root).exists():
-        msg = "T7 drive not mounted. Skipping lab recovery."
+        msg = "Data root not found. Skipping lab recovery."
         if verbose:
             print(msg)
         return {"skipped": True, "reason": msg}

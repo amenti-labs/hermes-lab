@@ -82,15 +82,6 @@ def provider_command(args: argparse.Namespace) -> list[str]:
     # Look for a provider-specific adapter script
     adapter = REPO_ROOT / "scripts" / f"{provider}_mutation_adapter.py"
     if not adapter.exists():
-        # Also check common aliases
-        aliases = {
-            "openai": "openai", "codex": "openai", "gpt": "openai",
-            "claude": "claude", "anthropic": "claude",
-        }
-        canonical = aliases.get(provider, provider)
-        adapter = REPO_ROOT / "scripts" / f"{canonical}_mutation_adapter.py"
-
-    if not adapter.exists():
         raise RuntimeError(
             f"No mutation adapter found for provider '{args.provider}'. "
             f"Create scripts/{provider}_mutation_adapter.py or use provider=stub."

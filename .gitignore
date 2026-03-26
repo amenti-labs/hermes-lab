@@ -1,6 +1,5 @@
 # Personal experiment data (the data root is user-specific, never committed)
 *-lab-data/
-sofi-lab-data/
 
 # User workspaces (contain experiment code, venvs, training artifacts)
 workspaces/
