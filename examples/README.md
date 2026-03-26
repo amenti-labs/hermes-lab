@@ -92,7 +92,7 @@ python3 scripts/labctl.py burst my-experiment --strategy random -n 20
 
 ## Example: Agent-Driven Code Mutation
 
-Use any AI agent (recommended: [hermes-agent](https://github.com/amenti-labs/hermes-agent)) to iteratively improve code:
+Use any AI agent (recommended: [Hermes Agent](https://github.com/nousresearch/hermes-agent)) to iteratively improve code:
 
 ```bash
 # Create from the local agent mutation template

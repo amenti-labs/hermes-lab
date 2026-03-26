@@ -174,7 +174,7 @@ final_executor_class: cloud-h100
 
 ## Agent Integration
 
-Hermes Lab is designed for AI agents. The recommended agent is [hermes-agent](https://github.com/amenti-labs/hermes-agent), but any agent that can read files and run shell commands will work.
+Hermes Lab is designed for AI agents. The recommended agent is [Hermes Agent](https://github.com/nousresearch/hermes-agent), but any agent harness that can read files and run shell commands will work.
 
 The `AGENTS.md` file at the repo root is the agent contract. `LAB_MANIFEST.json` is the machine-readable version.
 
