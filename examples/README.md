@@ -37,13 +37,13 @@ python3 scripts/labctl.py status
 
 ## Example: Hyperparameter Search
 
-Create a workspace directory with your training code and a `search_space.json`:
+Create a directory anywhere with your training code and a `search_space.json`:
 
 ```bash
-mkdir -p workspaces/my-experiment
+mkdir -p my-experiment
 ```
 
-`workspaces/my-experiment/search_space.json`:
+`my-experiment/search_space.json`:
 ```json
 {
   "learning_rate": {"low": 1e-5, "high": 1e-1, "log": true, "type": "float"},
@@ -52,7 +52,7 @@ mkdir -p workspaces/my-experiment
 }
 ```
 
-`workspaces/my-experiment/train.py`:
+`my-experiment/train.py`:
 ```python
 import json, sys
 
@@ -79,7 +79,7 @@ metric_direction: maximize
 priority: normal
 autonomous: true
 time_budget_minutes: 10
-workspace_root: workspaces/my-experiment
+workspace_root: my-experiment
 executor_command: python3 train.py
 validation_command: python3 train.py
 ```

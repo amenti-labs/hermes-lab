@@ -8,15 +8,20 @@ _Root-folder harness contract for generic coding and research agents_
 
 ```
 <repo-root>/
-  scripts/        lab engine (labctl.py)
-  lab-data/  experiments, dispatch, metrics
-  workspaces/     experiment code (e.g. my-experiment/)
-  templates/      experiment SPEC templates
+  lab/            core runtime
+  scripts/        CLI and executors (labctl.py)
+  templates/      SPEC templates
   docs/           reference documentation
+  examples/       working examples
+
+$HERMES_LAB_DATA_ROOT/   (default: ./lab-data)
+  experiments/    run history, metrics, projections
+  dispatch/       work packages for remote workers
+  registry/       event ledger and locks
 ```
 
-All paths use `HERMES_LAB_DATA_ROOT=<your-data-root>`.
-New experiment workspaces go in `workspaces/`.
+The DATA ROOT holds all lab state. Set `HERMES_LAB_DATA_ROOT` or use the default `./lab-data`.
+Your experiment code (WORKSPACE) lives wherever you want -- point to it with `workspace_root` in your SPEC.
 
 ### Execution modes
 

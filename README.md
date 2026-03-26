@@ -80,6 +80,13 @@ Start from a template that matches your use case:
 | `multifidelity-autoresearch.yaml` | Proxy/final two-tier experiments |
 | `research-sprint.yaml` | Time-boxed research sprint |
 
+## Key Concepts
+
+- **Data root** (`$HERMES_LAB_DATA_ROOT`): Where the lab stores all state -- experiment history, run bundles, metrics, dispatch queue. Default: `./lab-data`. Set the env var to put it anywhere.
+- **Workspace** (`workspace_root` in SPEC): Where your experiment code lives -- training scripts, configs, search space. Can be any directory, anywhere on disk. The lab reads from it but doesn't own it.
+
+These are independent. Your workspace might be `~/projects/my-model` while the data root is `~/lab-data`.
+
 ## Data Root Layout
 
 ```text
